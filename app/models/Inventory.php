@@ -4,5 +4,5 @@
 */
 class Inventory extends Eloquent
 {
-	protected $table = 'ss_inventory';
+	protected $table = 'ss_invdaily';
 }

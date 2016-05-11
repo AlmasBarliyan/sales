@@ -8,7 +8,7 @@ class SearchController extends \BaseController
 	{
 		$keywords = Input::get('keywords');
 
-		$inventory = DB::table('ss_inventory')->join('ss_po', 'ss_inventory.material_name', '=', 'ss_po.material_name')->distinct()->select('ss_po.po_no','ss_po.material_name')->get();
+		$inventory = DB::table('ss_invdaily')->join('ss_po', 'ss_invdaily.material_name', '=', 'ss_po.material_name')->distinct()->select('ss_po.po_no','ss_po.material_name')->get();
 
 		$searchInventory = new \Illuminate\Database\Eloquent\Collection();
 

@@ -11,11 +11,11 @@ class DeliveryOrderController extends \BaseController {
 	{
 		//$po = DB::table('ss_po')->distinct()->select('po_no')->get();
 		//$po = array(''=>'');
-		/*foreach (DB::table('ss_inventory')->join('ss_po', 'ss_inventory.material_name', '=', 'ss_po.material_name')->select('ss_po.po_no','ss_po.material_name')->get() as $row) {
+		/*foreach (DB::table('ss_invdaily')->join('ss_po', 'ss_invdaily.material_name', '=', 'ss_po.material_name')->select('ss_po.po_no','ss_po.material_name')->get() as $row) {
 		 	$po[$row->material_name] = $row->material_name;
 		 }*/ 
 		
-		$po = DB::table('ss_inventory')->join('ss_po', 'ss_inventory.material_code', '=', 'ss_po.material_code')->distinct()->select('ss_po.po_no','ss_po.material_code')->distinct()->get();
+		$po = DB::table('ss_invdaily')->join('ss_po', 'ss_invdaily.material_code', '=', 'ss_po.material_code')->distinct()->select('ss_po.po_no','ss_po.material_code')->distinct()->get();
 		
 		return View::make('do.create')
 			->with('purchase_order',$po);

@@ -1,5 +1,5 @@
 ﻿var countries = { 
-    /*"AD": "Hehe",
+    "AD": "Hehe",
     "A2": "Andorra Test",
     "AE": "United Arab Emirates",
     "AF": "Afghanistan",
@@ -263,5 +263,5 @@
     "ZA": "South Africa",
     "ZM": "Zambia",
     "ZW": "Zimbabwe",
-    "ZZ": "Unknown or Invalid Region"*/
+    "ZZ": "Unknown or Invalid Region"
 }

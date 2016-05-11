@@ -6,10 +6,11 @@ class InventoryController extends \BaseController {
 
         $products = array('' => '');
         foreach(Products::all() as $row)
-            $products[$row->material_code] = $row->material_code." ". $row->material_name ;
-        return View::make('inventory.inbound', array(
+            $products[$row->material_code] = $row->material_code." - ". $row->material_name ;
+        return View::make('inventory.in', array(
             'products'  => $products,
-            'storage'   => CommonCode::where('hcode','=',70)->get()
+            'storage'   => CommonCode::where('hcode','=','GD01')->where('code','!=','*')->get(),
+            'inbound'   => DB::table('tx_itemin')->get()
         ));
     }
     
@@ -28,7 +29,7 @@ class InventoryController extends \BaseController {
         endswitch;    
     }
     public function postCreate(){
-            date_default_timezone_set("Asia/Jakarta");
+        date_default_timezone_set("Asia/Jakarta");
             $num_of_ids = 1000; //Number of "ids" to generate.
             $i = 0; //Loop counter.
             $n = 0; //"id" number piece.
@@ -36,21 +37,21 @@ class InventoryController extends \BaseController {
 
             while ($i <= $num_of_ids) { 
                 //echo $id . "<br>"; //Print out the id.
-                if (DB::table('ss_transaksi')->whereNotNull('id_transaksi')->get()) {
+                if (DB::table('tx_itemin')->whereNotNull('id_transaksi')->get()) {
                  
-                $cek_id = DB::table('ss_transaksi')->select('id_transaksi')->get();
+                $cek_id = DB::table('tx_itemin')->select('id_transaksi')->get();
                 foreach ($cek_id as $ck) {
-                    $aa = substr($ck->id_transaksi, -3,3);
-                    $dt = substr($ck->id_transaksi, -11,8);
+                    $aa = substr($ck->id_transaksi, -5,5);
+                    $dt = substr($ck->id_transaksi, -11,6);
                     if ($aa == $aa) {
-                        if ($dt == date("Ymd")) {
+                        if ($dt == date("Ym")) {
                             $i++; $aa++; //Letters can be incremented the same as numbers. Adding 1 to "AAA" prints out "AAB".
-                            $id = $l .date("Ymd"). sprintf("%03d", $aa); //Create "id". Sprintf pads the number to make it 4 digits.             
+                            $id = $l .date("Ym"). sprintf("%05d", $aa); //Create "id". Sprintf pads the number to make it 4 digits.             
                             if ($n == 999) { //Once the number reaches 9999, increase the letter by one and reset number to 0.
                                 $n = 0;
                             }
                         }else{
-                            $id = $l .date("Ymd"). sprintf("%03d", $n-1); //Create "id". Sprintf pads the number to make it 4 digits.
+                            $id = $l .date("Ym"). sprintf("%05d", $n-1); //Create "id". Sprintf pads the number to make it 4 digits.
                             if ($n == 999) { //Once the number reaches 9999, increase the letter by one and reset number to 0.
                                 $n = 0;
                             }
@@ -59,7 +60,7 @@ class InventoryController extends \BaseController {
                         
                     }
                     else{
-                        $id = $l .date("Ymd"). sprintf("%03d", $n); //Create "id". Sprintf pads the number to make it 4 digits.            
+                        $id = $l .date("Ym"). sprintf("%05d", $n); //Create "id". Sprintf pads the number to make it 4 digits.            
                         if ($n == 999) { //Once the number reaches 9999, increase the letter by one and reset number to 0.
                             $n = 0;
                         }
@@ -69,43 +70,63 @@ class InventoryController extends \BaseController {
                     }
                 }
                 }else{
-                $id = $l .date("Ymd"). sprintf("%03d", $n); //Create "id". Sprintf pads the number to make it 4 digits.
+                $id = $l .date("Ym"). sprintf("%05d", $n); //Create "id". Sprintf pads the number to make it 4 digits.
                 if ($n == 999) { //Once the number reaches 9999, increase the letter by one and reset number to 0.
                     $n = 0;
                 }
                 $i++; $n++; //Letters can be incremented the same as numbers. Adding 1 to "AAA" prints out "AAB".
                 }   
             }
-            //echo "$id";
-            //exit();
-        $transaksi = new Transaksi();
-        $transaksi->company = 8888;
-        $transaksi->plant   = 8888;
-        $transaksi->id_transaksi = $id;
-        $transaksi->material_code = Input::get('material_code');
-        $transaksi->material_name = Input::get('material_name');
-        $transaksi->lot_number = Input::get('nicklot').Input::get('nolot');
-        $transaksi->good_qty_bag = Input::get('good_qty_bag');
-        $transaksi->good_qty_kgs = Input::get('good_qty_kgs');
-        $transaksi->bad_qty_bag = Input::get('bad_qty_bag');
-        $transaksi->bad_qty_kgs = Input::get('bad_qty_kgs');
-        $transaksi->result_bag  = Input::get('result_bag');
-        $transaksi->result_kgs  = Input::get('result_kgs');
-        $transaksi->storage     = Input::get('storage');
-        $transaksi->date_ym     = date("Ym");
-        $transaksi->status      = "G";
-        $transaksi->status2     = "I";
-        $transaksi->remark      = Input::get('remark');
-        $transaksi->created_at = date("Y-m-d H:i:s");
-        $transaksi->updated_at = date("Y-m-d H:i:s");
-        $transaksi->save();
-
+            
+        $insert = array();
+        
+        foreach (Input::get('qty') as $key => $qty) {
+            $insert[$key]['qty'] = $qty;
+        }
+        foreach (Input::get('status') as $key => $status) {
+            $insert[$key]['status'] = $status;
+        }
+        $company = 10;
+        $plant = 1010;
+        $material_code = Input::get('material_code');
+        $lot_number = Input::get('nicklot').date("ymd",strtotime(Input::get('nolot')));
+        $in = Transaksi::create([
+        'company'       => $company,
+        'plant'         => $plant,
+        'id_transaksi'  => $id,
+        'remark'        => Input::get('remark'),
+        'date_ym'       => date("Ym"),
+        'storage'       => Input::get('storage')
+        ]);
+        foreach ($insert as $row ) {
+            $in->InDetail()->attach($id,[
+                'id_transaksi'  => $id,
+                'material_code' => $material_code,
+                'lot_number'    => $lot_number,
+                'qty'           => $row['qty'],
+                'status'        => $row['status'],
+                ]);
+            $in->InvDaily()->attach($id,[
+                'id'            => $id,
+                'company'       => $company,
+                'plant'         => $plant,
+                'material_code' => $material_code,
+                'lot_number'    => $lot_number,
+                'in_daily_qty'  => $row['qty'],
+                'status'        => $row['status'],
+                'date_ym'       => date("Ymd"),
+                'remark'        => Input::get('remark')
+                ]);
+        }
         return Redirect::to('/inbound');
     }
     public function getReturn(){
         $inventory = array('' => '');
-        foreach(Inventory::all() as $row)
-            $inventory[$row->material_code] = $row->material_code." ". $row->material_name ;
+        foreach(DB::table('ss_invmonthly')->get() as $row)
+            foreach (Products::where('material_code','=',$row->material_code)->get() as $prd) {
+                $inventory[$row->material_code] = $row->material_code." - ".$prd->material_name;
+            }
+            
         return View::make('inventory.return', array(
             'products'  => $inventory
         ));

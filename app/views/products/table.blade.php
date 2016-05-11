@@ -25,6 +25,8 @@
   {{HTML::style('js/datatables/fixedHeader.bootstrap.min.css')}}
   {{HTML::style('js/datatables/responsive.bootstrap.min.css')}}
   {{HTML::style('js/datatables/scroller.bootstrap.min.css')}}
+  <!-- select2 -->
+  {{ HTML::style('css/select/select2.min.css')}}
   
   {{HTML::script('js/jquery.min.js')}}
 
@@ -137,7 +139,7 @@
         {{ HTML::script('js/icheck/icheck.min.js')}}
 
         {{ HTML::script('js/custom.js')}}
-
+        @yield('script')
 
         <!-- Datatables -->
         <!-- <script src="js/datatables/js/jquery.dataTables.js"></script>

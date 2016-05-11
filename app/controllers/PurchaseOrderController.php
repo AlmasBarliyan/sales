@@ -9,7 +9,7 @@ class PurchaseOrderController extends \BaseController {
 	 */
 	public function getIndex()
 	{
-		$po = DB::table('ss_inventory')->join('ss_po', 'ss_inventory.material_code', '=', 'ss_po.material_code')->distinct()->select('ss_po.po_no')->get();
+		$po = DB::table('ss_invdaily')->join('ss_po', 'ss_invdaily.material_code', '=', 'ss_po.material_code')->distinct()->select('ss_po.po_no')->get();
 		return View::make('po.create')
 			->with('customers',Customers::all())
 			->with('products',Products::all())
