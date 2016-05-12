@@ -45,7 +45,7 @@ class CommoncodeController extends \BaseController {
             $code->code_name= Input::get('code_name');
             $code->desc1    = Input::get('desc1');
             $code->desc2    = Input::get('desc2');
-            $code->save;
+            $code->save();
             
             return Redirect::to('/common-code/'.Session::get('hc'));
     }

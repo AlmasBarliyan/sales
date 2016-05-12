@@ -12,7 +12,7 @@ class LoginController extends \BaseController {
 		return View::make('pages.login');
 	}
 	public function postLogin(){
-		if (Auth::attempt(array('email'=>Input::get('email'),'password'=>Input::get('password')))) {
+		if (Auth::attempt(array('employee_code'=>Input::get('employee_code'),'password'=>Input::get('password')))) {
 			return Redirect::to('/beranda')->with('message','Selamat Datang di Halaman Admin.');
 		}
 

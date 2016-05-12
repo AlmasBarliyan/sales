@@ -29,7 +29,7 @@
   {{ HTML::style('css/select/select2.min.css')}}
   
   {{HTML::script('js/jquery.min.js')}}
-
+  <script src="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/jquery-ui.min.js"></script>
   <!--[if lt IE 9]>
         <script src="../assets/js/ie8-responsive-file-warning.js"></script>
         <![endif]-->

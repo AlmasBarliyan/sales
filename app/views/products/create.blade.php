@@ -13,8 +13,8 @@
                 <div class="input-group">
                   <input type="text" class="form-control" placeholder="Search for...">
                   <span class="input-group-btn">
-                            <button class="btn btn-default" type="button">Go!</button>
-                        </span>
+                    <button class="btn btn-default" type="button">Go!</button>
+                  </span>
                 </div>
               </div>
             </div>
@@ -69,7 +69,7 @@
                               <td>{{$mt->material_name}}</td>
                               <td>
                                 <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target=".bs-example-modal-lg{{$mt->material_code}}"><i class="fa fa-pencil"></i></button>
-                                <a href="{{URL::to('common-code/delete/'.$mt->material_code)}}" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> </a>
+                                <a href="{{URL::to('products/delete/'.$mt->material_code)}}" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> </a>
                               </td>
                             </tr>
                           @endforeach
@@ -179,6 +179,104 @@
             </div>
           </div>
         </div>
+        @foreach($material as $mt)
+        <div class="modal fade bs-example-modal-lg{{$mt->material_code}}" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+              </div>
+              <form class="form-horizontal form-label-left" novalidate action="{{URL::to('/edit-products')}}" method="post">
+              <div class="modal-body">
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Company</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" value="{{$mt->company}}" name="company" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Plant</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" name="plant" value="{{$mt->plant}}" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="material_code">Product Code <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="hidden" name="material_code" value="{{$mt->material_code}}">
+                        <input type="text" id="matrial_code" name="material_code" value="{{$mt->material_code}}" required="required" placeholder="123456" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="material_name">Product Name <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="material_name" class="form-control col-md-7 col-xs-12" name="material_name" value="{{$mt->material_name}}" placeholder="MSG Large Crystal Jombang (25kg)" required="required" type="text">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="material_name">Product Kategori <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="material_ktg" readonly="true" class="form-control col-md-7 col-xs-12" name="material_ktg" value="{{$mt->material_ktg}}" required="required" type="text">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="material_pack">Product Pack <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" id="material_pack" value="{{$mt->material_pack}}" name="material_pack" required="required" placeholder="BAG/BOX" class="form-control col-md-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="material_size">Product Size <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="material_size" class="form-control col-md-7 col-xs-12" value="{{$mt->material_size}}" name="material_size" placeholder="25" required="required" type="text">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="material_unit">Product Unit <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="material_unit" class="form-control col-md-7 col-xs-12" name="material_unit" value="{{$mt->material_unit}}" placeholder="KG/BOX" required="required" type="text">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="material_item">Product Item
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="material_item" class="form-control col-md-7 col-xs-12" name="material_item" value="{{$mt->material_item}}" placeholder="IMP / I+G" type="text">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="material_type">Product Type <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="material_type" class="form-control col-md-7 col-xs-12" name="material_type" value="{{$mt->material_type}}" placeholder="MSG / PROSIN" required="required" type="text">
+                    </div>
+                </div>
+                <div class="item form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nicklot">Nicklote <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input id="nickot" class="form-control col-md-7 col-xs-12" value="{{$mt->nicklot}}" name="nicklot" placeholder="GDAF" required="required" type="text">
+                    </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        @endforeach
               <!-- footer content -->
               <footer>
                 <div class="pull-right">

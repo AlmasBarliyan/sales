@@ -1,5 +1,8 @@
 <?php
-
+Route::get('add', 'InventoryController@add' );
+Route::get('sku',function(){
+	return View::make('inventory.sku');
+});
 Route::get('/', 'LoginController@index');
 Route::post('/login','LoginController@postLogin');
 Route::get('/logout','LoginController@getLogout');
@@ -18,6 +21,8 @@ Route::get('/users/{code}','UserController@getCode');
 //Products
 Route::get('/products','ProductController@getIndex');
 Route::get('/products/{code}','ProductController@getCode');
+Route::get('/products/delete/{code}','ProductController@destroy');
+Route::post('/edit-products','ProductController@update');
 Route::get('/table',function(){
 	return View::make('products.table');
 });
@@ -36,6 +41,8 @@ Route::controller('purchase-o', 'PurchaseOrderController');
 Route::get('/customers','CustomersController@getIndex');
 Route::post('/customers-create','CustomersController@postCreate');
 Route::get('/customers/{code}','CustomersController@getCode');
+Route::post('customers-update','CustomersController@postUpdate');
+Route::get('customer/delete/{customer_code}','CustomersController@destroy');
 // DO
 Route::get('/delivery-order','DeliveryOrderController@index');
 Route::post('/create-delivery-order','DeliveryOrderController@create');

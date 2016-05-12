@@ -53,7 +53,7 @@
                     
                     <h1>Login Form</h1>
                     <div>
-                        <input name="email" type="email" class="form-control" placeholder="Employee Number" required="" />
+                        <input name="employee_code" type="text" class="form-control" placeholder="Employee Number" required="" />
 
                     </div>
                     <div>

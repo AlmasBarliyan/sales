@@ -63,7 +63,7 @@ Route::filter('guest', function()
 /* Admin Filter*/
 Route::filter('admin', function()
 {
-	if (!Auth::user() || Auth::user()->plant != '1010' ) return Redirect::to('/');
+	if (!Auth::user() || Auth::user()->viewer == 'A' ) return Redirect::to('/');
 });
 
 

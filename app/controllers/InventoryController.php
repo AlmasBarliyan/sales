@@ -94,7 +94,6 @@ class InventoryController extends \BaseController {
         'company'       => $company,
         'plant'         => $plant,
         'id_transaksi'  => $id,
-        'remark'        => Input::get('remark'),
         'date_ym'       => date("Ym"),
         'storage'       => Input::get('storage')
         ]);
@@ -114,8 +113,7 @@ class InventoryController extends \BaseController {
                 'lot_number'    => $lot_number,
                 'in_daily_qty'  => $row['qty'],
                 'status'        => $row['status'],
-                'date_ym'       => date("Ymd"),
-                'remark'        => Input::get('remark')
+                'date_ym'       => date("Ymd")
                 ]);
         }
         return Redirect::to('/inbound');
@@ -130,6 +128,9 @@ class InventoryController extends \BaseController {
         return View::make('inventory.return', array(
             'products'  => $inventory
         ));
+    }
+    public function add(){
+        return View::make('inventory.add');
     }
     public function postReturn() {
         switch(Input::get('type')):
@@ -266,7 +267,6 @@ class InventoryController extends \BaseController {
             $transaksi->date_ym     = date("Ym");
             $transaksi->status      = "B";
             $transaksi->status2      = "R";
-            $transaksi->remark      = Input::get('remark');
             $transaksi->created_at = date("Y-m-d H:i:s");
             $transaksi->updated_at = date("Y-m-d H:i:s");
             $transaksi->save();

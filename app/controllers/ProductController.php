@@ -98,9 +98,23 @@ class ProductController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update()
 	{
-		//
+		$products = Products::find(Input::get('material_code'));
+        $products->company  = Input::get('company');
+        $products->plant    = Input::get('plant');
+        $products->material_code    = Input::get('material_code');
+        $products->material_name    = Input::get('material_name');
+        $products->material_ktg    	= Input::get('material_ktg');
+        $products->material_pack    = strtoupper(Input::get('material_pack'));
+        $products->material_size    = Input::get('material_size');
+        $products->material_unit    = strtoupper(Input::get('material_unit'));
+        $products->material_item    = strtoupper(Input::get('material_item'));
+        $products->material_type    = strtoupper(Input::get('material_type'));
+        $products->nicklot          = strtoupper(Input::get('nicklot'));
+        $products->save();
+
+        return Redirect::to('/products/'.Session::get('code'));
 	}
 
 
@@ -110,9 +124,12 @@ class ProductController extends \BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy($code)
 	{
-		//
+		$pr_code = Products::find($code);
+        $pr_code->delete();
+        
+        return Redirect::to('/products/'.Session::get('code'));
 	}
 
 

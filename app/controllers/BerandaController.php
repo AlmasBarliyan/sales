@@ -2,7 +2,7 @@
 
 class BerandaController extends \BaseController {
 
-
+	
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -12,6 +12,6 @@ class BerandaController extends \BaseController {
 	{
 		return View::make('pages.beranda');
 	}
-
+	
 
 }

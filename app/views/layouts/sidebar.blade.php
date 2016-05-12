@@ -23,12 +23,12 @@
           <ul class="nav child_menu" style="display: none">
               <li><a href="{{ URL::to('/inbound') }}"> Inbound</a>
               </li>
-              <li><a href="{{ URL::to('/return') }}"> Return</a>
+             <!--  <li><a href="{{ URL::to('/return') }}"> Return</a>
               </li>
               <li><a href="{{ URL::to('/purchase-order') }}"> Purchase Order </a>
               </li>
               <li><a href="{{ URL::to('/delivery-order') }}"> DO </a>
-              </li>
+              </li> -->
           </ul>
       </li>
     </ul>
