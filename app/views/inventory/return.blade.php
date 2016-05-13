@@ -3,7 +3,7 @@
 		<div class="">
           <div class="page-title">
             <div class="title_left">
-              <h3>Return Product</h3>
+              <h3>Return</h3>
             </div>
             <div class="title_right">
               <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
@@ -19,7 +19,7 @@
           <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
                 <div class="x_title">
-                  <h2>Return </h2>
+                  <h2>Items in Return </h2>
                   <ul class="nav navbar-right panel_toolbox">
                     <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                     </li>
@@ -38,9 +38,36 @@
                   <div class="clearfix"></div>
                 </div>
                 <div class="x_content">
-                  <br />
+                  <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Kode Transaksi</th>
+                        <th>Material Name</th>
+                        <th>Quantity Bad</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <?php 
+                      $no = 1;
+                    ?>
+                    @foreach($return as $rtn)
+                    <?php
+                      $material = DB::table('cd_material')->where('material_code','=',$rtn->material_code)->get();
+                    ?>
+                      <tr>
+                        <td>{{$no++}}</td>
+                        <td>{{$rtn->id_transaksi}}</td>
+                        @foreach($material as $mt)
+                        <td>{{$rtn->material_name}}</td>
+                        @endforeach
+                        <td>{{$rtn->qty}}</td>
+                      </tr>
+                    @endforeach
+                    </tbody>
+                  </table>
                   <form class="form-horizontal form-label-left input_mask" action="{{URL::to('/return-create')}}" method="post">
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                       <label class="control-label col-md-2 col-sm-2 col-xs-12">Product Name</label>
                       <div class="col-md-10 col-sm-10 col-xs-12">
 
@@ -72,7 +99,7 @@
                         <button type="submit" class="btn btn-primary">Cancel</button>
                         <button type="submit" class="btn btn-success">Submit</button>
                       </div>
-                    </div>
+                    </div>-->
 
                   </form>
                 </div>

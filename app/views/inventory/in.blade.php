@@ -4,7 +4,7 @@
           <div class="page-title">
             <div class="title_left">
               <h3>
-                Products
+                Inbound
               </h3>
             </div>
 
@@ -25,8 +25,6 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
                 <div class="x_content">
-                
-                <hr>
                 <!-- <table border=0  id="myTable"> 
 
                   <tr>
@@ -36,10 +34,10 @@
                       <td class="col-sm-1">
                           <input type="btn"  value="delete" />
                       </td>
-                      <td>-->
+                      <td>
                           <input size=10  type=number id=sku1 name=sku1 onchange="showUser(1, this.value)">
                           <input type="button" name="choice" onClick="selectValue('sku1')" value="?">
-<!--
+
                       </td>
                   </tr>
                   </table>
@@ -63,19 +61,23 @@
                      ?>
                     @foreach($inbound as $in)
                     <?php
-                      $gudang = DB::table('cd_code')->where('code','=',$in->storage)->get();
+                      $indetail = DB::table('tx_itemindetail')->where('id_transaksi','=',$in->id_transaksi)->get();
+                      foreach ($indetail as $ind) {
+                        $gudang = DB::table('cd_code')->where('code','=',$ind->storage)->get();
+                      }
+                     // 
                     ?>
                       <tr>
                         <td>{{$no++}}</td>
                         <td>{{$in->id_transaksi}}</td>
                         @foreach($gudang as $gdg)
-                        <td>{{$gdg->code_name}} </td>
+                        <td>{{$gdg->code_name}}</td>
                         @endforeach
                       </tr>
                     @endforeach
                     </tbody>
                   </table>
-                  <p>
+                  <!-- <p>
                     <label for="spinner">Banyak Produk :</label>
                     <input id="spinner" name="value" />
                     <input type="button" value="OK" id="ok" />
@@ -95,7 +97,7 @@
                           
                         </tbody>
                     </table>                  
-                </div>
+                </div> -->
                 </div>
               </div>
             </div>
@@ -108,56 +110,34 @@
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                <h4 class="modal-title" id="myModalLabel">Add Inbound</h4>
               </div>
-              <form class="form-horizontal form-label-left" novalidate action="{{URL::to('/create-product')}}" method="post">
+              <form class="form-horizontal form-label-left input_mask" action="{{URL::to('/inbound-create')}}" method="post">
               <div class="modal-body">
-                <!-- <table id="myTable" class="table table-striped responsive-utilities jambo_table bulk_action">
-                  <thead>
-                    <tr class="headings">
-                      <th>#</th>
-                      <th class="column-title">Product</th>
-                      <th class="column-title">Lot Number</th>
-                      <th class="column-title">Qty In</th>
-                      <th class="column-title">Good</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class="col-sm-1">
-                          <input type="button"  value="delete" />
-                      </td>
-                      <td>
-                          <input size=10  type=number id=sku1 name=sku1 onchange="showUser(1, this.value)">
-                          <input type="button" name="choice" onClick="selectValue('sku1')" value="?">
-                      </td>
-                      <td>
-                        <input type="text" class="col-md-12 fname" name="qty[]" />
-                      </td>
-                      <td>
-                        <input type="text" class="col-md-12 fname" name="qty[]" />
-                      </td>
-                      <td>
-                        <div class="radio">
-                          <label>
-                            <input type="radio" class="flat" checked name="iCheck"> Yes
-                            <input type="radio" class="flat" name="iCheck"> No
-                          </label>
-                        </div>
-                        <div class="radio">
-                          <label>
-                            
-                          </label>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table> -->
-                
-               </div>
+                <div class="form-group">
+                  <table id="myTable" class="table table-striped responsive-utilities jambo_table bulk_action">
+                    <thead>
+                      <tr class="headings">
+                        <th>#</th>
+                        <th>Product</th>
+                        <th>Lot Number</th>
+                        <th>Qty In</th>
+                        <th>Storage</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      
+                    </tbody>
+                  </table>
+                  <p>
+                      <input type="button" value="Insert row">
+                  </p>
+                </div>
+              </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary">Add</button>
               </div>
               </form>
             </div>
@@ -173,7 +153,7 @@
 <!-- /footer content -->
 @stop
 @section('script')
-<script>
+<!--<script>
 $(function() {
  var spinner = $( "#spinner" ).spinner({ min: 0 });
 
@@ -227,7 +207,7 @@ $( "button" ).button();
     xmlhttp.open("GET","getdata1.php?q="+str,true);  
     xmlhttp.send(); 
   } 
-</script> 
+</script>
 <script type="text/javascript">  
 function selectValue(id)
 {
@@ -242,7 +222,7 @@ function updateValue(id, value)
     document.getElementById(id).value = value;
 }
 
-</script>
+</script>-->
 <!-- select2 -->
 <script src="js/select/select2.full.js"></script>
 <script>
@@ -260,11 +240,11 @@ function updateValue(id, value)
     });
   </script>
 <script type="text/javascript">
-  $('#my-table').on('click', '.fa-trash', function () {
+  $('#myTable').on('click', '.fa-trash', function () {
     $(this).closest('tr').remove();
 })
 $('p input[type="button"]').click(function () {
-    $('#myTable').append('<tr><td class="col-sm-1"><input type="btn"  value="delete" /></td><td><input size=10  type=number id=sku1 name=sku1 onchange="showUser(1, this.value)"><input type="button" name="choice" onClick="selectValue("sku1")" value="?"></td></tr>')
+    $('#myTable').append('<tr><td><i class="fa fa-trash"></i></td><td style="width:10px"><select name="material_code[]" style="width:200px" class="col-md-12"><option></option>@foreach($products as $product)<option value="{{$product->material_code}}">{{$product->material_code}} - {{$product->material_name}}</option>@endforeach</select></td><td><input type="text" name="nolot[]" class="col-md-12"></td><td><input type="text" class="col-md-12"  name="qty[]" /></td><td> <select class="col-md-12" name="storage[]">@foreach($storage as $st)<option value="{{$st->code}}">{{$st->code_name}}</option>@endforeach</select></td><td><select class="col-md-12" name="status[]"><option value="G">Good</option><option value="B">Bad</option></select></td></tr>')
 });
 </script>
 @stop

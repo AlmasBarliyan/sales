@@ -4,11 +4,11 @@ class InventoryController extends \BaseController {
 
     public function getIndex() {
 
-        $products = array('' => '');
-        foreach(Products::all() as $row)
-            $products[$row->material_code] = $row->material_code." - ". $row->material_name ;
+        /*$products = array('' => '');
+        foreach( as $row)
+            $products[$row->material_code] = $row->material_code." - ". $row->material_name ;*/
         return View::make('inventory.in', array(
-            'products'  => $products,
+            'products'  => Products::all(),
             'storage'   => CommonCode::where('hcode','=','GD01')->where('code','!=','*')->get(),
             'inbound'   => DB::table('tx_itemin')->get()
         ));
@@ -79,42 +79,63 @@ class InventoryController extends \BaseController {
             }
             
         $insert = array();
-        
+        foreach (Input::get('storage') as $key => $storage) {
+            $insert[$key]['storage'] = $storage;
+        }
+        foreach (Input::get('material_code') as $key => $material_code) {
+            $insert[$key]['material_code'] = $material_code;
+        }
         foreach (Input::get('qty') as $key => $qty) {
             $insert[$key]['qty'] = $qty;
         }
         foreach (Input::get('status') as $key => $status) {
             $insert[$key]['status'] = $status;
         }
+        foreach (Input::get('nolot') as $key => $nolot) {
+            $insert[$key]['nolot'] = $nolot;
+        }
         $company = 10;
         $plant = 1010;
-        $material_code = Input::get('material_code');
-        $lot_number = Input::get('nicklot').date("ymd",strtotime(Input::get('nolot')));
+        //$material_code = Input::get('material_code');
+        /*$lot_number = array(''=>'');
+        foreach ($insert as $in) {
+            $nicklot = Products::where('material_code','=',$in['material_code'])->get();
+            foreach ($nicklot as $lot) {
+                $lot_number[$lot->nicklot] = $lot->nicklot;
+            }
+        }*/
+        
         $in = Transaksi::create([
         'company'       => $company,
         'plant'         => $plant,
         'id_transaksi'  => $id,
         'date_ym'       => date("Ym"),
-        'storage'       => Input::get('storage')
+        
         ]);
         foreach ($insert as $row ) {
+            //$lot_number = array(''=>'');
+            $nicklot = Products::where('material_code','=',$row['material_code'])->get();
+            foreach ($nicklot as $lot) {
             $in->InDetail()->attach($id,[
                 'id_transaksi'  => $id,
-                'material_code' => $material_code,
-                'lot_number'    => $lot_number,
+                'material_code' => $row['material_code'],
+                'lot_number'    => $lot->nicklot.$row['nolot'],
                 'qty'           => $row['qty'],
                 'status'        => $row['status'],
+                'storage'       => $row['storage']
                 ]);
             $in->InvDaily()->attach($id,[
                 'id'            => $id,
                 'company'       => $company,
                 'plant'         => $plant,
-                'material_code' => $material_code,
-                'lot_number'    => $lot_number,
+                'material_code' => $row['material_code'],
+                'lot_number'    => $lot->nicklot.$row['nolot'],
                 'in_daily_qty'  => $row['qty'],
+                'storage'       => $row['storage'],
                 'status'        => $row['status'],
                 'date_ym'       => date("Ymd")
                 ]);
+            }
         }
         return Redirect::to('/inbound');
     }
@@ -124,9 +145,11 @@ class InventoryController extends \BaseController {
             foreach (Products::where('material_code','=',$row->material_code)->get() as $prd) {
                 $inventory[$row->material_code] = $row->material_code." - ".$prd->material_name;
             }
-            
+        $p_bad = DB::table('tx_itemin')->join('tx_itemindetail', 'tx_itemindetail.id_transaksi', '=', 'tx_itemin.id_transaksi')->where( 'tx_itemindetail.status','=','B')->get();
+        $return = DB::table('tx_itemin')->where(DB::raw('substr(id_transaksi, 1,3)'),'=','RTN')->get();
         return View::make('inventory.return', array(
-            'products'  => $inventory
+            'products'  => $inventory,
+            'return' => $return    
         ));
     }
     public function add(){

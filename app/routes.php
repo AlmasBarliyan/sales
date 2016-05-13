@@ -3,6 +3,12 @@ Route::get('add', 'InventoryController@add' );
 Route::get('sku',function(){
 	return View::make('inventory.sku');
 });
+Route::get('auto',function(){
+	return View::make('inventory.auto');
+});
+Route::get('data',function(){
+	return View::make('item-data.php');
+});
 Route::get('/', 'LoginController@index');
 Route::post('/login','LoginController@postLogin');
 Route::get('/logout','LoginController@getLogout');
