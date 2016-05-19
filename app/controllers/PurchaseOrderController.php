@@ -16,14 +16,13 @@ class PurchaseOrderController extends \BaseController {
 		/*$po = DB::table('ss_invdaily')->join('ss_po', 'ss_invdaily.material_code', '=', 'ss_po.material_code')->distinct()->select('ss_po.po_no')->get();*/
 		$currency = (DB::table('cd_code')->join('exchange_rate_bi', 'exchange_rate_bi.currency_code', '=', 'cd_code.code')->get());
 		$purchase_order = DB::select(DB::raw("SELECT * FROM ss_pomaster p LEFT JOIN ss_customers c1 ON p.customer_code = c1.customer_code LEFT JOIN ss_customerdtl c2 ON p.ship_to_party = c2.ship_to_party LEFT JOIN cd_code c3 ON p.source = c3.code"));
-		$purchase_order_detail = DB::select(DB::raw("SELECT * FROM ss_pomaster p LEFT JOIN ss_podetail d ON p.po_no = d.po_no"));
+		
 		return View::make('po.po')
 			->with('customers',Customers::where('customer_ktg','=',Auth::user()->emp_ktg)->get())
 			->with('source',CommonCode::where('code','!=','*')->where('hcode','LIKE','%'.'PB'.'%')->get())
 			//->with('currency',CommonCode::where('code','!=','*')->where('hcode','LIKE','%'.'CUR'.'%')->get());
 			->with('currency', $currency)
-			->with('purchase_order',$purchase_order)
-			->with('po_edit',$purchase_order_detail);
+			->with('purchase_order',$purchase_order);
 			/*->with('customers',Customers::all())
 			->with('products',Products::all())
 			->with('storages',CommonCode::where('hcode','=',70)->where('code','!=',701)->where('code','!=',702)->where('code','!=',703)->where('code','!=',704)->where('code','!=',0)->get())

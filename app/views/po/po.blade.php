@@ -289,7 +289,7 @@
           </div>
         </div>
       </div>
-      @foreach($po_edit as $po)
+      @foreach($purchase_order as $po)
       <div class="modal fade bs-example-modal-lg{{$po->po_no}}" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg" style="width:90%">
           <div class="modal-content">
@@ -309,19 +309,19 @@
                           
                       ?>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input name="po_no"  type="text" class="form-control col-md-7 col-xs-12" />
+                        <input name="po_no" value="{{$po->po_no}}" type="text" class="form-control col-md-7 col-xs-12" />
                       </div>
                   </div>
                   <div class="form-group" >
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">Po Date</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                      <input name="po_date" type="date" value="<?php echo date('Y-m-d')?>" class="form-control col-md-7 col-xs-12"  tabindex="1"/>
+                      <input name="po_date" type="date" value="{{date("Y-m-d",strtotime($po->po_date))}}"" class="form-control col-md-7 col-xs-12"  tabindex="1"/>
                       </div>
                   </div>
                   <div class="form-group" >
                       <label class="control-label col-md-3 col-sm-3 col-xs-12">ETA PO</label>
                       <div class="col-md-6 col-sm-6 col-xs-12">
-                        <input name="eta_po" type="date" class="form-control col-md-7 col-xs-12">
+                        <input name="eta_po" type="date" value="{{$po->eta_po}}" class="form-control col-md-7 col-xs-12">
                       </div>
                   </div>
                   <div class="form-group" >
@@ -330,7 +330,7 @@
                         <select name="customer" class="select2_single form-control" style="width:100%" id="sCustomer">
                         <option></option>
                           @foreach($customers as $customer)
-                            <option value="{{$customer->customer_code}}">{{$customer->customer_code }} - {{$customer->customer_name}}</option>
+                            <option value="{{$customer->customer_code}}" <?php if ($po->customer_code==$customer->customer_code) echo 'selected="selected"'; ?>>{{$customer->customer_code }} - {{$customer->customer_name}}</option>
                           @endforeach
                         </select>
                       </div>
@@ -387,15 +387,19 @@
                   </tr>
                   </thead>
                   <tbody>
+                  <?php
+                    $purchase_order_detail = DB::select(DB::raw("SELECT * FROM ss_podetail p LEFT JOIN cd_material m ON p.material_code = m.material_code where p.po_no=$po->po_no"));
+                  ?>
+                  @foreach($purchase_order_detail as $pod)
                       <tr class="item-row">
                           <td style="width:20px"></td>
-                          <td style="width:50px"><input style="width:50px" name="material_code[]" value="" class="tInput" id="itemCode" /></td><td style="width:250px"><input style="width:300px" name="material_name[]" value="" class="tInput" id="itemDesc"  readonly="readonly" /></td>
-                          <td style="width:80px"><input style="width:80px" name="qty[]" value="" class="tInput" id="itemQty" tabindex="1" /></td>
-                          <td><input style="width:80px" name="price_idr[]" value="" class="tInput" tabindex="2" /></td>
-                          <td><input style="width:80px" name="price_usd[]" value="" class="tInput" readonly="readonly" /></td>
-                          <td><input style="width:140px" type="text" name="exclude_idr[]" readonly="readonly" /></td>
-                          <td><input style="width:140px" type="text" name="exclude_usd[]" readonly="readonly"  /></td>
-                          <td style="width:100px"><input style="width:100px" name="include[]" value="" class="tInput" readonly="readonly" id=""></td>
+                          <td style="width:50px"><input style="width:50px" name="material_code[]" value="{{$pod->material_code}}" id="itemCode" class="tInput"  /></td><td style="width:250px"><input style="width:300px" name="material_name[]" value="{{$pod->material_name}}" class="tInput" id="itemDesc"  readonly="readonly" /></td>
+                          <td style="width:80px"><input style="width:80px" name="qty[]" value="{{$pod->qty}}" class="tInput" id="itemQty" tabindex="1" /></td>
+                          <td><input style="width:80px" name="price_idr[]" value="{{$pod->u_price_idr}}" class="tInput" tabindex="2" /></td>
+                          <td><input style="width:80px" name="price_usd[]" value="{{$pod->u_price_usd}}" class="tInput" readonly="readonly" /></td>
+                          <td><input style="width:140px" type="text" name="exclude_idr[]" value="{{$pod->exclude_idr}}" readonly="readonly" /></td>
+                          <td><input style="width:140px" type="text" name="exclude_usd[]" readonly="readonly" value="{{$pod->exclude_usd}}" /></td>
+                          <td style="width:100px"><input style="width:100px" name="include[]" value="{{$pod->include}}" class="tInput" readonly="readonly" id=""></td>
                           <!-- <td style="width:200px"><input style="width:50px" name="nicklot[]" value="" class="tInput" id="itemPrice" readonly="readonly" /><input style="width:130px" type="text" placeholder="161230" class="tInput" name="nolot[]" id="nicklot" tabindex="2"></td>
                           <td><input name="qty[]" value="" class="tInput" id="itemQty" tabindex="2"/></td>
                           <td>
@@ -405,6 +409,7 @@
                               </select>
                           </td> -->
                       </tr>
+                    @endforeach
                   </tbody>
               </table>
               <div class="ln_solid"></div>
@@ -435,7 +440,7 @@
           <div class="clearfix"></div>
           <div id="notif-group" class="tabbed_notifications"></div>
         </div>
-        {{HTML::script('https://maxcdn.bootstrapcdn.com/bootstrap/2.3.1/js/bootstrap.min.js')}}
+        {{HTML::script('js/bootstrap/bootstrap.2.3.1.min.js')}}
         
         <!-- bootstrap progress js -->
         {{ HTML::script('js/progressbar/bootstrap-progressbar.min.js')}}
