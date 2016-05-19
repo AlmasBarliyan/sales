@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('products.table')
 @section('content')
 		<div class="">
           <div class="page-title">
@@ -19,7 +19,7 @@
           <div class="col-md-12 col-sm-12 col-xs-12">
               <div class="x_panel">
                 <div class="x_title">
-                  <h2>Items in Return </h2>
+                  <h2>Items Bad in Warehouse </h2>
                   <ul class="nav navbar-right panel_toolbox">
                     <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                     </li>
@@ -43,8 +43,9 @@
                       <tr>
                         <th>#</th>
                         <th>Kode Transaksi</th>
-                        <th>Material Name</th>
+                        <th>Material</th>
                         <th>Quantity Bad</th>
+                        <th>Warehouse</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -53,15 +54,15 @@
                     ?>
                     @foreach($return as $rtn)
                     <?php
-                      $material = DB::table('cd_material')->where('material_code','=',$rtn->material_code)->get();
+                      $material = DB::table('cd_material')->where('material_code','=',$rtn->material_code)->first();
+                      $gudang = DB::table('cd_code')->where('code','=',$rtn->storage)->where('hcode','!=','*')->first();
                     ?>
                       <tr>
                         <td>{{$no++}}</td>
-                        <td>{{$rtn->id_transaksi}}</td>
-                        @foreach($material as $mt)
-                        <td>{{$rtn->material_name}}</td>
-                        @endforeach
-                        <td>{{$rtn->qty}}</td>
+                        <td>{{$rtn->lot_number}}</td>
+                        <td>{{$material->material_code}} - {{$material->material_name}}</td>
+                        <td>{{$rtn->in_qty}} BAG <span class="tags">BAD</span></td>
+                        <td>{{$gudang->code_name}}</td>
                       </tr>
                     @endforeach
                     </tbody>

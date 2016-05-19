@@ -1,7 +1,10 @@
 <?php
 
 class ProductController extends \BaseController {
-
+	public function __construct()
+    {
+        $this->beforeFilter('auth');
+    }
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -10,7 +13,8 @@ class ProductController extends \BaseController {
 	public function getIndex()
 	{
 
-		Session::clear();
+		//Session::clear('code');
+		Session::forget('code');
 		$company = CommonCode::where('code','=','10')->get();
 		foreach ($company as $cmp) {
 			$company = $cmp->code;

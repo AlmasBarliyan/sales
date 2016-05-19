@@ -35,7 +35,17 @@ App::after(function($request, $response)
 
 Route::filter('auth', function()
 {
-	if (Auth::guest()) return Redirect::guest('/');
+	if (Auth::guest()) 
+	{
+		if (Auth::check()) {
+			return Redirect::to('/beranda');
+		}
+		else
+		{
+			return Redirect::guest('/');
+		}	
+	}
+	
 });
 
 

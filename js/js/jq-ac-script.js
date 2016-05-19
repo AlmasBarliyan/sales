@@ -12,7 +12,7 @@ $(document).ready(function(){
                     $itemrow.find('#itemPrice').val(ui.item.itemPrice);
 
                     // Give focus to the next input field to recieve input from user
-                    $('#itemQty').focus();
+                    $('#nicklot').focus();
 
             return false;
 	    }
@@ -31,10 +31,11 @@ $(document).ready(function(){
     var rowTemp = [
         '<tr class="item-row">',
             '<td><a id="deleteRow"><img src="images/images/icon-minus.png" alt="Remove Item" title="Remove Item"></a></td>',
-            '<td><input name="itemCode[]" class="tInput" value="" id="itemCode" /> </td>',
-            '<td><input name="itemDesc[]" class="tInput" value="" id="itemDesc"  readonly="readonly" /></td>',
-            '<td><input name="itemQty[]" class="tInput" value="" id="itemQty" /></td>',
-            '<td><input name="itemPrice[]" class="tInput" value="" id="itemPrice" /></td>',
+            '<td><input style="width:50px" name="material_code[]" value="" class="tInput" id="itemCode" tabindex="1"/></td>',
+            '<td><input name="material_name[]" value="" class="tInput" id="itemDesc"  readonly="readonly" /></td>',
+            '<td style="width:200px"><input style="width:50px" name="nicklot[]" value="" class="tInput" id="itemPrice" readonly="readonly" /><input tabindex="2" style="width:130px" type="text" placeholder="161230" class="tInput" name="nolot[]" id="nicklot"></td>',
+            '<td><input name="qty[]" value="" class="tInput" id="itemQty" tabindex="2"/></td>',
+            '<td><select name="status[]" class="tInput"><option value="G">Good</option><option value="B">Bad</option></select></td>',
         '</tr>'
     ].join('');
 
@@ -48,6 +49,8 @@ $(document).ready(function(){
         var $itemDesc 	        = $row.find('#itemDesc');
         var $itemPrice	        = $row.find('#itemPrice');
         var $itemQty	        = $row.find('#itemQty');
+        
+        var $nicklot            = $row.find('#nicklot');
 
         if ( $('#itemCode:last').val() !== '' ) {
 
@@ -59,9 +62,11 @@ $(document).ready(function(){
                     $itemCode.val(ui.item.itemCode);
                     $itemDesc.val(ui.item.itemDesc);
                     $itemPrice.val(ui.item.itemPrice);
+                    $itemQty.val(ui.item.itemQty);
+                    
 
                     // Give focus to the next input field to recieve input from user
-                    $itemQty.focus();
+                    $nicklot.focus();
 
                     return false;
                 }
@@ -79,9 +84,9 @@ $(document).ready(function(){
         return false;
     });
 
-    $('#itemCode').focus(function(){
+    /*$('#itemCode').focus(function(){
         window.onbeforeunload = function(){ return "You haven't saved your data.  Are you sure you want to leave this page without saving first?"; };
-    });
+    });*/
 
 }); // End DOM
 

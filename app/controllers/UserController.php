@@ -1,7 +1,10 @@
 <?php
 
 class UserController extends \BaseController {
-
+	public function __construct()
+    {
+        $this->beforeFilter('auth');
+    }
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -9,7 +12,8 @@ class UserController extends \BaseController {
 	 */
 	public function getIndex()
 	{
-		Session::clear();
+		//Session::clear();
+		Session::forget('code');
 		return View::make('user.create')
             ->with('hcode',CommonCode::where('hcode','=','CA01')->where('code','!=','*')->get())
 			->with('plant',CommonCode::where('hcode','=','CA02')->where('code','!=','*')->get())

@@ -49,7 +49,7 @@
         @endif
 
             <section class="login_content">
-                <form action="{{URL::to('/login')}}" method="post">
+                <form action="{{URL::route('masuk')}}" method="POST">
                     
                     <h1>Login Form</h1>
                     <div>
@@ -60,16 +60,7 @@
                         <input name="password" type="password" class="form-control" placeholder="Password" required="" />
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-default submit">Log In</button>
-                    </div>
-                    <div class="clearfix"></div>
-                    <div class="separator">
-
-                        <div class="clearfix"></div>
-                        <br />
-                        <div>
-                            <p>©2016 All Rights Reserved.</p>
-                        </div>
+                        <button type="submit">Log In</button>
                     </div>
                 </form>
                 <!-- form -->

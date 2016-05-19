@@ -1,7 +1,10 @@
 <?php
 
 class CommoncodeController extends \BaseController {
-
+    public function __construct()
+    {
+        $this->beforeFilter('auth');
+    }
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -9,7 +12,8 @@ class CommoncodeController extends \BaseController {
 	 */
 	public function getIndex()
 	{
-        Session::clear();
+        //Session::clear('hc');
+        Session::forget('hc');
 		return View::make('pages.commoncode')
             ->with('commoncode',CommonCode::where('code','=','*')->get())
             ->with('hcode',CommonCode::where('code','=','*')->get());

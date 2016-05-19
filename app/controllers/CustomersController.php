@@ -3,12 +3,13 @@
 class CustomersController extends \BaseController {
 
 	public function getIndex(){
-		Session::clear();
+		//Session::clear();
+		Session::forget('code');
 		return View::make('customer.create')
 			->with('hcode',CommonCode::where('hcode','=','CA01')->where('code','!=','*')->get())
 			->with('plant',CommonCode::where('hcode','=','CA02')->where('code','!=','*')->get())
 			->with('code',CommonCode::where('code','!=',0)->where('hcode','=',10)->get())
-			->with('tabs',CommonCode::where('code','LIKE','%'.'B2'.'%')->where('hcode','=','ITP')->where('code','!=','*')->get())
+			->with('tabs',CommonCode::where('code','LIKE','%'.'B2'.'%')->where('hcode','=','CA03')->where('code','!=','*')->get())
 			->with('customers',Customers::all());
 	}
 	public function getCode($code){
@@ -21,7 +22,7 @@ class CustomersController extends \BaseController {
 			->with('hcode',CommonCode::where('hcode','=','CA01')->where('code','!=','*')->get())
 			->with('plant',CommonCode::where('hcode','=','CA02')->where('code','!=','*')->get())
 			->with('code',CommonCode::where('code','!=',0)->where('hcode','=',10)->get())
-			->with('tabs',CommonCode::where('code','LIKE','%'.'B2'.'%')->where('hcode','=','ITP')->where('code','!=','*')->get())
+			->with('tabs',CommonCode::where('code','LIKE','%'.'B2'.'%')->where('hcode','=','CA03')->where('code','!=','*')->get())
 			->with('company',$company)
 			->with('customers',Customers::where('plant','=',1010)->where('customer_ktg','=',Session::get('code'))->get());	
 	}

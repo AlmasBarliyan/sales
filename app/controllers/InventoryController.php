@@ -1,13 +1,16 @@
 <?php
 
 class InventoryController extends \BaseController {
-
+    public function __construct()
+    {
+        $this->beforeFilter('auth');
+    }
     public function getIndex() {
 
         /*$products = array('' => '');
         foreach( as $row)
             $products[$row->material_code] = $row->material_code." - ". $row->material_name ;*/
-        return View::make('inventory.in', array(
+        return View::make('inventory.create', array(
             'products'  => Products::all(),
             'storage'   => CommonCode::where('hcode','=','GD01')->where('code','!=','*')->get(),
             'inbound'   => DB::table('tx_itemin')->get()
@@ -28,9 +31,13 @@ class InventoryController extends \BaseController {
             break;
         endswitch;    
     }
+    public function add(){
+        return View::make('inventory.add')
+            ->with('storage',CommonCode::where('hcode','=','GD01')->where('code','!=','*')->get());
+    }
     public function postCreate(){
         date_default_timezone_set("Asia/Jakarta");
-            $num_of_ids = 1000; //Number of "ids" to generate.
+            /*$num_of_ids = 1000; //Number of "ids" to generate.
             $i = 0; //Loop counter.
             $n = 0; //"id" number piece.
             $l = "STO"; //"id" letter piece.
@@ -76,12 +83,9 @@ class InventoryController extends \BaseController {
                 }
                 $i++; $n++; //Letters can be incremented the same as numbers. Adding 1 to "AAA" prints out "AAB".
                 }   
-            }
+            }*/
             
         $insert = array();
-        foreach (Input::get('storage') as $key => $storage) {
-            $insert[$key]['storage'] = $storage;
-        }
         foreach (Input::get('material_code') as $key => $material_code) {
             $insert[$key]['material_code'] = $material_code;
         }
@@ -94,8 +98,10 @@ class InventoryController extends \BaseController {
         foreach (Input::get('nolot') as $key => $nolot) {
             $insert[$key]['nolot'] = $nolot;
         }
-        $company = 10;
-        $plant = 1010;
+        $company = Auth::user()->company;
+        $plant = Auth::user()->plant;
+        $storage = Input::get('storage');
+        $date_in = Input::get('date_in');
         //$material_code = Input::get('material_code');
         /*$lot_number = array(''=>'');
         foreach ($insert as $in) {
@@ -104,36 +110,38 @@ class InventoryController extends \BaseController {
                 $lot_number[$lot->nicklot] = $lot->nicklot;
             }
         }*/
-        
+        $id_transaksi = Input::get('id_transaksi');
         $in = Transaksi::create([
         'company'       => $company,
         'plant'         => $plant,
-        'id_transaksi'  => $id,
-        'date_ym'       => date("Ym"),
-        
+        'id_transaksi'  => $id_transaksi,
+        'date_in'       => $date_in,
+        'storage'       => $storage,
+        'status'        => 'I',
+        'user_create'   => Auth::user()->employee_code,
+        'user_update'   => Auth::user()->employee_code
         ]);
         foreach ($insert as $row ) {
             //$lot_number = array(''=>'');
             $nicklot = Products::where('material_code','=',$row['material_code'])->get();
             foreach ($nicklot as $lot) {
-            $in->InDetail()->attach($id,[
-                'id_transaksi'  => $id,
+            $in->InDetail()->attach($id_transaksi,[
+                'id_transaksi'  => $id_transaksi,
                 'material_code' => $row['material_code'],
                 'lot_number'    => $lot->nicklot.$row['nolot'],
                 'qty'           => $row['qty'],
-                'status'        => $row['status'],
-                'storage'       => $row['storage']
+                'status'        => $row['status']
                 ]);
-            $in->InvDaily()->attach($id,[
-                'id'            => $id,
+            $in->InvDaily()->attach($id_transaksi,[
+                'id'            => $id_transaksi,
                 'company'       => $company,
                 'plant'         => $plant,
                 'material_code' => $row['material_code'],
                 'lot_number'    => $lot->nicklot.$row['nolot'],
                 'in_daily_qty'  => $row['qty'],
-                'storage'       => $row['storage'],
+                'storage'       => $storage,
                 'status'        => $row['status'],
-                'date_ym'       => date("Ymd")
+                'date_ym'       => $date_in
                 ]);
             }
         }
@@ -146,15 +154,13 @@ class InventoryController extends \BaseController {
                 $inventory[$row->material_code] = $row->material_code." - ".$prd->material_name;
             }
         $p_bad = DB::table('tx_itemin')->join('tx_itemindetail', 'tx_itemindetail.id_transaksi', '=', 'tx_itemin.id_transaksi')->where( 'tx_itemindetail.status','=','B')->get();
-        $return = DB::table('tx_itemin')->where(DB::raw('substr(id_transaksi, 1,3)'),'=','RTN')->get();
+        $return = DB::table('ss_invmonthly')->where('status','=','B')->where('end_qty','!=',0)->get();
         return View::make('inventory.return', array(
             'products'  => $inventory,
             'return' => $return    
         ));
     }
-    public function add(){
-        return View::make('inventory.add');
-    }
+    
     public function postReturn() {
         switch(Input::get('type')):
             case 'lotnumber':

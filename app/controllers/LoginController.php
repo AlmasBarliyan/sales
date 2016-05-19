@@ -7,17 +7,20 @@ class LoginController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function auth()
 	{
 		return View::make('pages.login');
 	}
-	public function postLogin(){
+	public function postAuth(){
+		
 		if (Auth::attempt(array('employee_code'=>Input::get('employee_code'),'password'=>Input::get('password')))) {
+
 			return Redirect::to('/beranda')->with('message','Selamat Datang di Halaman Admin.');
 		}
 
-		return Redirect::to('/')->with('message','Email atau Password Salah!!');
+		return Redirect::to('/')->with('message','Employee Code atau Password Salah!!');
 	}
+
 	public function getLogout(){
 		Auth::logout();
 		return Redirect::to('/');

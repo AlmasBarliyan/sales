@@ -3,7 +3,7 @@
     $dbhost = 'localhost';  // Database Host
     $dbuser = 'root';       // Database Username
     $dbpass = '';           // Database Password
-    $dbname = 'items';      // Database Name
+    $dbname = 'sales';      // Database Name
 
     /* Connect to the database and select database */
     $conn = mysql_connect($dbhost, $dbuser, $dbpass) or die(mysql_error());
@@ -13,14 +13,14 @@
     $return_arr = array();
     $param = $_GET["term"];
 
-    $fetch = mysql_query("SELECT * FROM items WHERE itemCode REGEXP '^$param' LIMIT 5");
+    $fetch = mysql_query("SELECT * FROM cd_material WHERE material_code REGEXP '^$param' or material_name LIKE '%$param%' LIMIT 10");
 
     /* Retrieve and store in array the results of the query.*/
     while ($row = mysql_fetch_array($fetch, MYSQL_ASSOC)) {
 
-        $row_array['itemCode']          = $row['itemCode'];
-        $row_array['itemDesc']          = $row['itemDesc'];
-        $row_array['itemPrice']         = $row['itemPrice'];
+        $row_array['itemCode']          = $row['material_code'];
+        $row_array['itemDesc']          = $row['material_name'];
+        /*$row_array['itemPrice']         = $row['nicklot'];*/
 
         array_push( $return_arr, $row_array );
     }

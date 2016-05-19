@@ -9,11 +9,10 @@ Route::get('auto',function(){
 Route::get('data',function(){
 	return View::make('item-data.php');
 });
-Route::get('/', 'LoginController@index');
-Route::post('/login','LoginController@postLogin');
+Route::get('/', 'LoginController@auth');
+Route::post('/masuk',array('as' => 'masuk', 'uses'=> 'LoginController@postAuth'));
 Route::get('/logout','LoginController@getLogout');
-//Beranda
-Route::get('/beranda','BerandaController@getIndex');
+Route::get('/beranda','IndexController@index');
 //Common-Code
 Route::get('/common-code','CommoncodeController@getIndex');
 Route::post('/common-code/tambah','CommoncodeController@postTambah');
@@ -53,7 +52,12 @@ Route::get('customer/delete/{customer_code}','CustomersController@destroy');
 Route::get('/delivery-order','DeliveryOrderController@index');
 Route::post('/create-delivery-order','DeliveryOrderController@create');
 Route::controller('delivery', 'DeliveryOrderController');
-
+//currency
+Route::get('/currency','CurrencyController@index');
+Route::post('/create-currency','CurrencyController@store');
+Route::post('/update-currency','CurrencyController@update');
+Route::get('/delete-currency/{exchange_date}','CurrencyController@delete');
+//
 Route::get('/search',function()
 {
 	return View::make('search');

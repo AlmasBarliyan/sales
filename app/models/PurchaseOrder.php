@@ -4,18 +4,21 @@
 */
 class PurchaseOrder extends Eloquent
 {
-	protected $table = 'ss_po';
+	protected $table = 'ss_pomaster';
 	protected $fillable = array(
 		'company',
 		'plant',
-		'so_date',
-		'etd',
-		'source',
-		'eta_po',
 		'po_no',
-		'po_date'
+		'po_date',
+		'customer_code',
+		'ship_to_party',
+		'source',
+		'currency_code',
+		'currency_rate',
+		'user_create',
+		'user_update'
 		);
-	/*public function PoDetail(){
-		return $this->belongsToMany('Products','ss_po_detail','material_name','po_no')->withPivot('order_qty','unit_price','include','exclude');
-	}*/
+	public function PoDetail(){
+		return $this->belongsToMany('Products','ss_podetail','material_code','po_no')->withPivot('material_code','qty', 'price_idr','price_usd','exclude_idr','exclude_usd','include');
+	}
 }
